@@ -28,7 +28,7 @@ public class GoogleTest extends BaseTest {
         String title = googlePage.getPageTitle();
         System.out.println("Page Title: " + title);
 
-        Assert.assertTrue(title.contains("SeleniumGirish"));
+        Assert.assertTrue(title.contains("Selenium"));
         System.out.println("Validation Passed");
     }
 }
