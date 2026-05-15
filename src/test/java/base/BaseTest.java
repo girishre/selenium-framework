@@ -38,12 +38,24 @@ public class BaseTest {
             browser = prop.getProperty("browser");
         }
 
+        boolean isCI = System.getenv("JENKINS_URL") != null;
+
         if (browser.equalsIgnoreCase("chrome")) {
             ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
-            chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-            chromeOptions.setExperimentalOption("useAutomationExtension", false);
-            chromeOptions.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36");
+            if (isCI) {
+                // Headless mode for Jenkins/Docker
+                chromeOptions.addArguments("--headless");
+                chromeOptions.addArguments("--no-sandbox");
+                chromeOptions.addArguments("--disable-dev-shm-usage");
+                chromeOptions.addArguments("--disable-gpu");
+                chromeOptions.addArguments("--window-size=1920,1080");
+            } else {
+                // Normal mode for local
+                chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+                chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+                chromeOptions.setExperimentalOption("useAutomationExtension", false);
+                chromeOptions.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36");
+            }
             driver = new ChromeDriver(chromeOptions);
 
         } else if (browser.equalsIgnoreCase("edge")) {
